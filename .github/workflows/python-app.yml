@@ -23,20 +23,28 @@ jobs:
           python -m pip install --upgrade pip
           # You can add dependencies installation here if needed
 
-      - name: Run Python script
-        run: python main.py
+      - name: Run Python script and capture output
+        id: run-python
+        run: |
+          python main.py
+          echo "Output: ${{ steps.run-python.outputs.stdout }}" >> $GITHUB_ENV
         working-directory: ${{ github.workspace }}
 
-      - name: Debug Git status
+      - name: Determine new folder name
         run: |
-          git status --porcelain
-          echo "status=$(git status --porcelain)" >> $GITHUB_ENV
+          output=$(grep -o 'Folder .\+' $GITHUB_ENV | tail -1)
+          if [[ $output =~ Folder\ '(.+)'\ created\ successfully. ]]; then
+            folder_name="${BASH_REMATCH[1]}"
+            echo "Folder name is $folder_name"
+            echo "folder_name=$folder_name" >> $GITHUB_ENV
+          fi
 
-      - name: Commit changes if any
-        if: ${{ env.status != '' }}
+      - name: Create new folder and commit changes
+        if: env.folder_name != ''
         run: |
           git config --global user.email "magicalmind01@gmail.com"
           git config --global user.name "shayaliza"
-          git add .
-          git commit -m "Update folders via GitHub Actions"
+          mkdir $env.folder_name
+          git add $env.folder_name
+          git commit -m "Create $env.folder_name via GitHub Actions"
           git push
