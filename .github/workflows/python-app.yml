@@ -1,3 +1,31 @@
+# name: Run Python Script
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     # test
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v2
+#         with:
+#           python-version: "3.x"
+
+#       - name: Install dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           # You can add dependencies installation here if needed
+
+#       - name: Run Python script
+#         run: python ../main.py
+
 name: Run Python Script
 
 on:
@@ -8,7 +36,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # test
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -24,4 +52,5 @@ jobs:
           # You can add dependencies installation here if needed
 
       - name: Run Python script
-        run: python ../main.py
+        run: python main.py
+        working-directory: ${{ github.workspace }}
