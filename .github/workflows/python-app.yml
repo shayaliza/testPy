@@ -24,4 +24,4 @@ jobs:
           # You can add dependencies installation here if needed
 
       - name: Run Python script
-        run: python ./../main.py
+        run: python ../main.py
