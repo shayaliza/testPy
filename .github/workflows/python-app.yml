@@ -24,21 +24,19 @@ jobs:
           # You can add dependencies installation here if needed
 
       - name: Run Python script
-        run: |
-          python main.py
-          ls -l  # Optional: List files and folders in the current directory
+        run: python main.py
         working-directory: ${{ github.workspace }}
 
-      - name: Check status and add changes
-        run: |
-          git status
-          git add .
+      - name: Check Git status
+        run: git status --porcelain
+        id: git_status
 
-      - name: Commit changes
+      - name: Commit changes if any
+        if: ${{ steps.git_status.outputs.stdout != '' }}
         run: |
           git config --global user.email "magicalmind01@gmail.com"
           git config --global user.name "shayaliza"
+          git add .
           git commit -m "Update folders via GitHub Actions"
-
-      - name: Push changes
-        run: git push
+          git push
+        else: echo "No changes to commit."
