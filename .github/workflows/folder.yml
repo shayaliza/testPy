@@ -28,6 +28,6 @@ jobs:
 
       - name: Commit changes
         run: |
-          git config user.name "${{ steps.get_pat_username.outputs.ci_pat_user }}"
+          git config shayaliza "${{ steps.get_pat_shayaliza.outputs.ci_pat_user }}"
           git add .
           git commit -m "[github actions] Update dependency"
