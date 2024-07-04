@@ -28,15 +28,17 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Check Git status
-        run: git status --porcelain
         id: git_status
+        run: echo ::set-output name=status::$(git status --porcelain)
 
       - name: Commit changes if any
-        if: ${{ steps.git_status.outputs.stdout != '' }}
         run: |
-          git config --global user.email "magicalmind01@gmail.com"
-          git config --global user.name "shayaliza"
-          git add .
-          git commit -m "Update folders via GitHub Actions"
-          git push
-        else: echo "No changes to commit."
+          if [ "${{ steps.git_status.outputs.status }}" != "" ]; then
+            git config --global user.email "magicalmind01@gmail.com"
+            git config --global user.name "shayaliza"
+            git add .
+            git commit -m "Update folders via GitHub Actions"
+            git push
+          else
+            echo "No changes to commit."
+          fi
