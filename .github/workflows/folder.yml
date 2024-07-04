@@ -26,12 +26,16 @@ jobs:
             index=$((index + 1))
           done
 
-      - name: Commit and push changes
+      # - name: Commit and push changes
+      #   run: |
+      #     git config --global user.email "magicalmind01@gmail.com"
+      #     git config --global user.name "shayaliza"
+      #     git add .
+      #     git commit -m "Create $new_folder via GitHub Actions"
+      #     git push
+      - name: Commit changes
         run: |
-          git config --global user.email "magicalmind01@gmail.com"
-          git config --global user.name "shayaliza"
-          git add .
-          git commit -m "Create $new_folder via GitHub Actions"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        git config user.name "${{ steps.get_pat_username.outputs.ci_pat_user }}" && \
+        git add . && \
+        git commit -m "[github actions] Update dependency"
+
