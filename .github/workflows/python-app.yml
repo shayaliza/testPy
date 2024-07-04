@@ -26,25 +26,22 @@ jobs:
       - name: Run Python script and capture output
         id: run-python
         run: |
-          python main.py
-          echo "Output: ${{ steps.run-python.outputs.stdout }}" >> $GITHUB_ENV
+          output=$(python main.py)
+          echo "::set-output name=output::$output"
         working-directory: ${{ github.workspace }}
 
       - name: Determine new folder name
+        id: get-folder-name
         run: |
-          output=$(grep -o 'Folder .\+' $GITHUB_ENV | tail -1)
-          if [[ $output =~ Folder\ '(.+)'\ created\ successfully. ]]; then
-            folder_name="${BASH_REMATCH[1]}"
-            echo "Folder name is $folder_name"
-            echo "folder_name=$folder_name" >> $GITHUB_ENV
-          fi
+          folder_name=$(echo "${{ steps.run-python.outputs.output }}" | grep -o "Folder '[^']\+'" | tail -1 | sed "s/^Folder '\(.*\)' created successfully./\1/")
+          echo "::set-output name=folder_name::$folder_name"
 
       - name: Create new folder and commit changes
-        if: env.folder_name != ''
+        if: ${{ steps.get-folder-name.outputs.folder_name != '' }}
         run: |
           git config --global user.email "magicalmind01@gmail.com"
           git config --global user.name "shayaliza"
-          mkdir $env.folder_name
-          git add $env.folder_name
-          git commit -m "Create $env.folder_name via GitHub Actions"
+          mkdir ${{ steps.get-folder-name.outputs.folder_name }}
+          git add .
+          git commit -m "Create ${{ steps.get-folder-name.outputs.folder_name }} via GitHub Actions"
           git push
