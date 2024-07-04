@@ -30,11 +30,10 @@ jobs:
       - name: Debug Git status
         run: |
           git status --porcelain
-          echo "::set-output name=status::$(git status --porcelain)"
-        id: git_status
+          echo "status=$(git status --porcelain)" >> $GITHUB_ENV
 
       - name: Commit changes if any
-        if: steps.git_status.outputs.status != ''
+        if: ${{ env.status != '' }}
         run: |
           git config --global user.email "magicalmind01@gmail.com"
           git config --global user.name "shayaliza"
