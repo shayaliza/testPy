@@ -33,3 +33,5 @@ jobs:
           git add .
           git commit -m "Create $new_folder via GitHub Actions"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
