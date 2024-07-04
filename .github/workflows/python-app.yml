@@ -30,20 +30,5 @@ jobs:
           echo "::set-output name=output::$output"
         working-directory: ${{ github.workspace }}
 
-      - name: Create new folder
-        run: |
-          git config --global user.email "magicalmind01@gmail.com"
-          git config --global user.name "shayaliza"
-          index=1
-          while true; do
-            new_folder="test${index}"
-            if [ ! -d "$new_folder" ]; then
-              mkdir "$new_folder"
-              echo "Folder '$new_folder' created successfully."
-              break
-            fi
-            index=$((index + 1))
-          done
-          git add .
-          git commit -m "Create $new_folder via GitHub Actions"
-          git push
+      - name: Print output
+        run: echo ${{ steps.run-python.outputs.output }}
