@@ -8,7 +8,7 @@
 # jobs:
 #   build:
 #     runs-on: ubuntu-latest
-#     # test
+
 #     steps:
 #       - name: Checkout repository
 #         uses: actions/checkout@v2
@@ -24,7 +24,8 @@
 #           # You can add dependencies installation here if needed
 
 #       - name: Run Python script
-#         run: python ../main.py
+#         run: python main.py
+#         working-directory: ${{ github.workspace }}
 
 name: Run Python Script
 
@@ -54,3 +55,17 @@ jobs:
       - name: Run Python script
         run: python main.py
         working-directory: ${{ github.workspace }}
+
+      - name: Create 'test' folder
+        run: mkdir test
+
+      - name: Create 'hello.txt' file
+        run: echo "Hello, world!" > test/hello.txt
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add .
+          git commit -m "Add 'hello.txt' file via GitHub Actions"
+          git push
